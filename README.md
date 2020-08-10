@@ -20,7 +20,7 @@ GTA V solo creates an __empty public session__ on GTA online for you!
 
 ## Download
 
-GTA V solo can be downloaded from the [release page](https://github.com/eonm/gtav-solo/releases/latest/download) of this repo.
+GTA V solo can be downloaded from the [release page](https://github.com/eonm/gtav-solo/releases/latest) of this repo.
 
 ## How it's work ?
 
