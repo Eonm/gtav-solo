@@ -9,6 +9,18 @@ use log::LevelFilter;
 use std::{thread, time};
 use sysinfo::{Process, ProcessExt, Signal, System, SystemExt};
 
+#[cfg(target_os = "windows")]
+use winapi::um::winnt::{HANDLE, PROCESS_ALL_ACCESS, PROCESS_QUERY_INFORMATION, PROCESS_VM_READ};
+
+#[cfg(target_os = "windows")]
+use winapi::um::handleapi::CloseHandle;
+
+#[cfg(target_os = "windows")]
+use winapi::shared::ntdef::NT_SUCCESS;
+
+#[cfg(target_os = "windows")]
+use sysinfo::Pid;
+
 fn main() {
     let mut log_builder = Builder::from_default_env();
 
@@ -53,7 +65,7 @@ fn find_process_by_name<'a>(proc_name: &'a str, system: &'a mut System) -> Vec<&
 #[cfg(not(target_os = "windows"))]
 fn stop(process: &Process) -> bool {
     let pid = process.pid();
-    info!("Stoping process {:?}", pid);
+    info!("Stopping process {:?}", pid);
     let result = process.kill(Signal::Stop);
 
     if result {
@@ -63,6 +75,22 @@ fn stop(process: &Process) -> bool {
     }
 
     result
+}
+
+#[cfg(target_os = "windows")]
+fn stop(process: &Process) -> bool {
+    use ntapi::ntpsapi::NtSuspendProcess;
+
+    if let Some(handler) = get_process_handler(process.pid()) {
+        unsafe {
+            let result: bool = NT_SUCCESS(NtSuspendProcess(handler));
+            println!("result {:?}", result);
+            CloseHandle(handler);
+            result
+        }
+    } else {
+        false
+    }
 }
 
 #[cfg(not(target_os = "windows"))]
@@ -79,6 +107,21 @@ fn resume(process: &Process) -> bool {
     }
 
     result
+}
+
+#[cfg(target_os = "windows")]
+fn resume(process: &Process) -> bool {
+    use ntapi::ntpsapi::NtResumeProcess;
+
+    if let Some(handler) = get_process_handler(process.pid()) {
+        unsafe {
+            let result = NT_SUCCESS(NtResumeProcess(handler));
+            CloseHandle(handler);
+            result
+        }
+    } else {
+        false
+    }
 }
 
 fn freeze(process_name: &str, duration: u64) {
@@ -130,18 +173,6 @@ fn uniq_process(process_name: &str) {
 }
 
 #[cfg(target_os = "windows")]
-use winapi::um::winnt::{HANDLE, PROCESS_ALL_ACCESS, PROCESS_QUERY_INFORMATION, PROCESS_VM_READ};
-
-#[cfg(target_os = "windows")]
-use winapi::um::handleapi::CloseHandle;
-
-#[cfg(target_os = "windows")]
-use winapi::shared::ntdef::NT_SUCCESS;
-
-#[cfg(target_os = "windows")]
-use sysinfo::Pid;
-
-#[cfg(target_os = "windows")]
 fn get_process_handler(pid: Pid) -> Option<HANDLE> {
     use winapi::shared::minwindef::{DWORD, FALSE};
     use winapi::um::processthreadsapi::OpenProcess;
@@ -156,36 +187,5 @@ fn get_process_handler(pid: Pid) -> Option<HANDLE> {
         None
     } else {
         Some(process_handler)
-    }
-}
-
-#[cfg(target_os = "windows")]
-fn stop(process: &Process) -> bool {
-    use ntapi::ntpsapi::NtSuspendProcess;
-
-    if let Some(handler) = get_process_handler(process.pid()) {
-        unsafe {
-            let result: bool = NT_SUCCESS(NtSuspendProcess(handler));
-            println!("result {:?}", result);
-            CloseHandle(handler);
-            result
-        }
-    } else {
-        false
-    }
-}
-
-#[cfg(target_os = "windows")]
-fn resume(process: &Process) -> bool {
-    use ntapi::ntpsapi::NtResumeProcess;
-
-    if let Some(handler) = get_process_handler(process.pid()) {
-        unsafe {
-            let result = NT_SUCCESS(NtResumeProcess(handler));
-            CloseHandle(handler);
-            result
-        }
-    } else {
-        false
     }
 }
