@@ -3,7 +3,6 @@ use rand::distributions::{Distribution, Uniform};
 use rand::seq::SliceRandom;
 
 pub fn logo() {
-    let number_of_stars = 4;
     let star = ["▄ ██╗▄", " ████╗", "▀╚██╔▀", "  ╚═╝ "];
 
     let logo_rows = 6;
