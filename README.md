@@ -34,4 +34,4 @@ You should bind this script to a shortcut.
 
 ## Other implementation
 
-* [GTASuspender](https://github.com/Jyrka98/GTASuspender) created by Jyrka98 is written in C++
+* [GTASuspender](https://github.com/Jyrka98/GTASuspender) created by [@Jyrka98](https://github.com/Jyrka98) and written in C++
