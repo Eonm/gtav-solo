@@ -1,0 +1,22 @@
+[package]
+name = "gta-solo"
+version = "0.1.0"
+authors = ["Eonm <eon.mathis@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+sysinfo = "0.15.0"
+log = "0.4.11"
+env_logger = "0.7.1"
+colored = "2"
+rand = "0.7.3"
+
+[target.'cfg(windows)'.dependencies]
+winapi = { version = "0.3", features = ["fileapi", "handleapi", "ifdef", "ioapiset", "minwindef", "pdh", "psapi", "synchapi", "sysinfoapi", "winbase", "winerror", "winioctl", "winnt", "oleauto", "wbemcli", "rpcdce", "combaseapi", "objidl", "powerbase", "netioapi", "lmcons", "lmaccess", "lmapibuf", "memoryapi", "shellapi", "debugapi"] }
+ntapi = { version="0.3", features = ["user"]}
+
+[profile.release]
+opt-level = 3
+lto = "fat"
