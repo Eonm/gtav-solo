@@ -1,5 +1,5 @@
 [package]
-name = "gta-solo"
+name = "gtav-solo"
 version = "0.1.0"
 authors = ["Eonm <eon.mathis@gmail.com>"]
 edition = "2018"
