@@ -30,13 +30,13 @@ No need to unplug your network cable anymore, GTA V solo freezes GTA5.exe proces
 
 ### Pro
 
-This approach doesn't require admin privileges.
+This approach doesn't require admin privileges for linux users.
 
 ### Cons
 
-This approach only create a temporary public solo lobby. After player other player can join.
+This approach creates a temporary public solo lobby. After a while (20 to 30 minutes) other players might join the session again.
 
-In the future a firewall based approach will be will be added.
+In the future a firewall based approach will be added.
 
 ## Usage
 
@@ -44,7 +44,7 @@ You should bind this script to a shortcut.
 
 ## Motivations
 
-Providing a rust implementation which run on Linux (proton player) and windows.
+Providing an open licensed rust implementation which runs on Linux (proton player) and Windows.
 
 ## Other implementation (not limited)
 
